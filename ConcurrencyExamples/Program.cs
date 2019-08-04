@@ -15,6 +15,7 @@ namespace Parallelism
 
         static void Main(string[] args)
         {
+            //Data Paralellism
             var inputs = Utils.GetRandomPositiveNumbers(count, maxValue);
 
             var a = new DataParallelism.CalculateSquareRoots.Calculator(new DataParallelism.CalculateSquareRoots.ParallelClassStrategy()).CalculateSquareRootsInParallel(inputs);
@@ -25,15 +26,11 @@ namespace Parallelism
             var b = new DataParallelism.CalculateSquareRoots.Calculator(new DataParallelism.CalculateSquareRoots.PLinqStrategy()).CalculateSquareRootsInParallel(inputs);
             WriteCalculateSquareRootsResultsToConsole(b);
 
-
-
-
             Console.WriteLine($"{Environment.NewLine}----------------------------------------------------------{Environment.NewLine}");
 
-
-
+            //Task Paralellism
             Parallel.Invoke(
-                GetActionThatTakesRandomAmountOfTime(),
+                 GetActionThatTakesRandomAmountOfTime(),
                  GetActionThatTakesRandomAmountOfTime(),
                  GetActionThatTakesRandomAmountOfTime(),
                  GetActionThatTakesRandomAmountOfTime()
@@ -56,12 +53,6 @@ namespace Parallelism
                 Console.WriteLine();
             }
         }
-
-        private static void WriteThreadId(int threadId)
-        {
-            Console.Write($"thread[{threadId}]: ");
-        }
-
 
         public static Action GetActionThatTakesRandomAmountOfTime()
         {

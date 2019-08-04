@@ -19,7 +19,5 @@ namespace Parallelism
 
             return numbers;
         }
-
-        
     }
 }

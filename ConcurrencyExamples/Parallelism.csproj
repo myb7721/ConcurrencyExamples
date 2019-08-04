@@ -49,7 +49,6 @@
     <Compile Include="DataParallelism\CalculateSquareRoots\PLinqStrategy.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TaskParallelism\MultipleCalculations\Calculator.cs" />
     <Compile Include="Utils.cs" />
   </ItemGroup>
   <ItemGroup>
