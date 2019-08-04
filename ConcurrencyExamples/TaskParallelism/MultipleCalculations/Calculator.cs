@@ -4,13 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Parallelism
+namespace Parallelism.TaskParallelism.MultipleCalculations
 {
-    public class TaskParallelism
+    public class Calculator
     {
-
-
-
-
+     
     }
 }
