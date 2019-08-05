@@ -13,36 +13,21 @@ namespace Asynchrony
         static void Main(string[] args)
         {
             var executionTime = Utils.GetRandomPositiveNumbers(3, 1E5);
-            Task t1 = Task.Run(
-                () =>
-                {
-                    Console.WriteLine($"thread[{Thread.CurrentThread.ManagedThreadId}]: {DateTime.Now.TimeOfDay}");
-                    Thread.Sleep(new Random(Thread.CurrentThread.ManagedThreadId).Next((int)1E2, (int)1E4));
-                    Console.WriteLine($"thread[{Thread.CurrentThread.ManagedThreadId}]: {DateTime.Now.TimeOfDay}");
-                });
-
-            Task t2 = Task.Run(
-               () =>
-               {
-                   Console.WriteLine($"thread[{Thread.CurrentThread.ManagedThreadId}]: {DateTime.Now.TimeOfDay}");
-                   Thread.Sleep(new Random(Thread.CurrentThread.ManagedThreadId).Next((int)1E2, (int)1E4));
-                   Console.WriteLine($"thread[{Thread.CurrentThread.ManagedThreadId}]: {DateTime.Now.TimeOfDay}");
-               });
-
-            Task t3 = Task.Run(
-               () =>
-               {
-                   Console.WriteLine($"thread[{Thread.CurrentThread.ManagedThreadId}]: {DateTime.Now.TimeOfDay}");
-                   Thread.Sleep(new Random(Thread.CurrentThread.ManagedThreadId).Next((int)1E2, (int)1E4));
-                   Console.WriteLine($"thread[{Thread.CurrentThread.ManagedThreadId}]: {DateTime.Now.TimeOfDay}");
-               });
-
-            Task.Run(()=>Task.WhenAll(t1, t2, t2));
-
-            //this will dead lock ui
-            Task.WhenAll(t1, t2, t2).Wait();
+           
+            //Both async and potentially parallel;
+           Task.WhenAll(Test(), Test(), Test()).Wait();
 
             Console.ReadKey();
+        }
+
+        private static async Task Test()
+        {
+            await Task.Run(async () =>
+           {
+               Console.WriteLine($"thread[{Thread.CurrentThread.ManagedThreadId}]: {DateTime.Now.TimeOfDay}");
+               await Task.Delay(new Random(Thread.CurrentThread.ManagedThreadId).Next((int)1E2, (int)1E4));
+               Console.WriteLine($"thread[{Thread.CurrentThread.ManagedThreadId}]: {DateTime.Now.TimeOfDay}");
+           });
         }
     }
 }
