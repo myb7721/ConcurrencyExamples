@@ -1,4 +1,5 @@
-﻿using Parallelism;
+﻿using Common;
+using Parallelism;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,15 +15,17 @@ namespace Parallelism
         static int count = (int)1E2;
 
         static void Main(string[] args)
-        {
+        {           
             //Data Paralellism
             var inputs = Utils.GetRandomPositiveNumbers(count, maxValue);
 
+            //Will adjust thread usage to system conditions
             var a = new DataParallelism.CalculateSquareRoots.Calculator(new DataParallelism.CalculateSquareRoots.ParallelClassStrategy()).CalculateSquareRootsInParallel(inputs);
             WriteCalculateSquareRootsResultsToConsole(a);
 
             Console.WriteLine($"{Environment.NewLine}----------------------------------------------------------{Environment.NewLine}");
 
+            //will try to use all available threads
             var b = new DataParallelism.CalculateSquareRoots.Calculator(new DataParallelism.CalculateSquareRoots.PLinqStrategy()).CalculateSquareRootsInParallel(inputs);
             WriteCalculateSquareRootsResultsToConsole(b);
 
@@ -41,7 +44,6 @@ namespace Parallelism
 
         private static void WriteCalculateSquareRootsResultsToConsole(IDictionary<int, List<Tuple<int, double>>> data)
         {
-
             foreach (var k in data.Keys)
             {
                 Console.Write($"thread[{k}]: ");

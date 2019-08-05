@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{9B5D2186-F8DF-4B1A-B026-7550BC5AEB13}</ProjectGuid>
+    <ProjectGuid>{080608F7-5DE3-43BE-BB2A-282C162B4FCD}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Parallelism</RootNamespace>
-    <AssemblyName>Parallelism</AssemblyName>
+    <RootNamespace>Asynchrony</RootNamespace>
+    <AssemblyName>Asynchrony</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -43,13 +43,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DataParallelism\CalculateSquareRoots\IStrategy.cs" />
-    <Compile Include="DataParallelism\CalculateSquareRoots\ParallelClassStrategy.cs" />
-    <Compile Include="DataParallelism\CalculateSquareRoots\Calculator.cs" />
-    <Compile Include="DataParallelism\CalculateSquareRoots\PLinqStrategy.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Utils.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

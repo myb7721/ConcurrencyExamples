@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
-namespace Parallelism
-{/*
-    public static class Utils
+namespace Common
+{
+    public static  class Utils
     {
+
         public static List<double> GetRandomPositiveNumbers(int count, double max)
         {
             var numbers = new List<double>();
@@ -19,5 +16,8 @@ namespace Parallelism
 
             return numbers;
         }
-    }*/
+
+     
+
+    }
 }
