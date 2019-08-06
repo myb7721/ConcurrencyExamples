@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +10,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
-namespace DeadlockDemo
+namespace ConcurrencyDemo
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -72,28 +73,127 @@ namespace DeadlockDemo
 
         #region ParallelismDemo
 
-        //UI method
+
         private void Data_Parallel_Class_Click(object sender, RoutedEventArgs e)
         {
             Console.WriteLine($"uiThread[{Thread.CurrentThread.ManagedThreadId}]");
 
+            var inputs = GetRandomPositiveNumbers(100, 1E10);
+            Parallel.ForEach(inputs, i =>
+            {
+                var sqrt = Math.Sqrt(i);
+                var threadId = Thread.CurrentThread.ManagedThreadId;
+
+                Console.WriteLine($"thread[{Thread.CurrentThread.ManagedThreadId}] {i} => {sqrt}");
+            });
         }
 
         private void Data_PLINQ_Click(object sender, RoutedEventArgs e)
         {
             Console.WriteLine($"uiThread[{Thread.CurrentThread.ManagedThreadId}]");
+            GetRandomPositiveNumbers(100, 1E10).AsParallel().ForAll(
+                i =>
+                {
+                    var sqrt = Math.Sqrt(i);
+                    var threadId = Thread.CurrentThread.ManagedThreadId;
 
+                    Console.WriteLine($"thread[{Thread.CurrentThread.ManagedThreadId}] {i} => {sqrt}");
+                });
         }
 
-        private void ParallelTask_PLINQ_Click(object sender, RoutedEventArgs e)
+        private void Task_ParallelTask_Click(object sender, RoutedEventArgs e)
         {
             Console.WriteLine($"uiThread[{Thread.CurrentThread.ManagedThreadId}]");
 
+            void GetActionThatTakesRandomAmountOfTime(int order)
+            {
+                Console.WriteLine($"action[{order}] - thread[{Thread.CurrentThread.ManagedThreadId}] - startTime[{DateTime.Now.TimeOfDay}]");
+                Thread.Sleep(new Random(Thread.CurrentThread.ManagedThreadId).Next((int)1E2, (int)1E4));
+                Console.WriteLine($"action[{order}] - thread[{Thread.CurrentThread.ManagedThreadId}] - endTime[{DateTime.Now.TimeOfDay}]");
+            }
+
+            Parallel.Invoke(
+                 () => GetActionThatTakesRandomAmountOfTime(0),
+                  () => GetActionThatTakesRandomAmountOfTime(1),
+                 () => GetActionThatTakesRandomAmountOfTime(2),
+                  () => GetActionThatTakesRandomAmountOfTime(3),
+                  () => GetActionThatTakesRandomAmountOfTime(4),
+                 () => GetActionThatTakesRandomAmountOfTime(5),
+                 () => GetActionThatTakesRandomAmountOfTime(6)
+                );
+        }
+
+        private void Race_Example(object sender, RoutedEventArgs e)
+        {
+            Console.WriteLine($"uiThread[{Thread.CurrentThread.ManagedThreadId}]");
+
+            int sharedResource = 0;
+
+            void ModifyMySharedResource()
+            {
+                sharedResource++;
+                Console.WriteLine($"thread[{Thread.CurrentThread.ManagedThreadId}] - start - sharedResource[{sharedResource}]");
+            }
+
+            Parallel.Invoke(
+                ModifyMySharedResource,
+                ModifyMySharedResource,
+                ModifyMySharedResource,
+                ModifyMySharedResource,
+                ModifyMySharedResource,
+                ModifyMySharedResource,
+                ModifyMySharedResource
+               );
+
+            Console.WriteLine($"uiThread[{Thread.CurrentThread.ManagedThreadId}] - end - sharedResource[{sharedResource}]");
+        }
+
+        object exampleLock = new object();
+        private void Lock_Example(object sender, RoutedEventArgs e)
+        {
+            Console.WriteLine($"uiThread[{Thread.CurrentThread.ManagedThreadId}]");
+
+            int sharedResource = 0;
+
+            void ModifyMySharedResource()
+            {
+                lock (exampleLock)
+                {
+                    sharedResource++;
+                    Console.WriteLine($"thread[{Thread.CurrentThread.ManagedThreadId}] - start - sharedResource[{sharedResource}]");
+                }
+            }
+
+            Parallel.Invoke(
+                ModifyMySharedResource,
+                ModifyMySharedResource,
+                ModifyMySharedResource,
+                ModifyMySharedResource,
+                ModifyMySharedResource,
+                ModifyMySharedResource,
+                ModifyMySharedResource
+               );
+
+            Console.WriteLine($"uiThread[{Thread.CurrentThread.ManagedThreadId}] - end - sharedResource[{sharedResource}]");
+        }
+
+
+        private static List<double> GetRandomPositiveNumbers(int count, double max)
+        {
+            var numbers = new List<double>();
+            for (int i = 0; i < count; i++)
+            {
+                numbers.Add(new Random(i).NextDouble() * max);
+            }
+
+            return numbers;
         }
 
         #endregion
 
         #region Asynchrony Demo
+
+        //when all
 
         //continuation demo
 

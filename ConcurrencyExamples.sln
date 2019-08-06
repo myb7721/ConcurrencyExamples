@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Asynchrony", "Asynchrony\As
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{E167F75E-927D-4563-B240-B59033A61503}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeadlockDemo", "DeadlockDemo\DeadlockDemo.csproj", "{6A88C61F-5F1B-420A-BA5D-DBC38F652743}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConcurrencyDemo", "DeadlockDemo\ConcurrencyDemo.csproj", "{6A88C61F-5F1B-420A-BA5D-DBC38F652743}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
