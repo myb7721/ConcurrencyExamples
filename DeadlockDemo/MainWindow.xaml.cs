@@ -21,19 +21,86 @@ namespace DeadlockDemo
             InitializeComponent();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        #region DeadlockDemo
+        //UI method
+        private void Deadlock_Click(object sender, RoutedEventArgs e)
         {
-            
-           Console.WriteLine($"uiThread[{Thread.CurrentThread.ManagedThreadId}]");
-            //Task.Run(()=> GetTask()).Wait();
-            GetTask().Wait();
+            Console.WriteLine($"uiThread[{Thread.CurrentThread.ManagedThreadId}]");
+
+            //1. The UI method calls the Outer async method(in the UI context).
+            DoNothingTask().Wait(); //4. The UI method synchronously blocks (.Wait()) on the Task returned by the Outer async method. This blocks the context (UI) thread. 
         }
 
-        private async Task GetTask()
+        // Starting a task on thread that is not the calling thread will also avoid the deadlock. 
+        private void No_Deadlock_Background_Click(object sender, RoutedEventArgs e)
+        {
+            Console.WriteLine($"uiThread[{Thread.CurrentThread.ManagedThreadId}]");
+            Task.Run(() => DoNothingTask()).Wait();
+        }
+
+        private void No_Deadlock_Configure_Await_Click(object sender, RoutedEventArgs e)
+        {
+            Console.WriteLine($"uiThread[{Thread.CurrentThread.ManagedThreadId}]");
+            DoNothingTaskConfigureAwaitFalse().Wait();
+        }
+
+        //Outter async method
+        private async Task DoNothingTask()
         {
             Console.WriteLine($"taskThread[{Thread.CurrentThread.ManagedThreadId}]");
-            //await Task.Delay(new Random(Thread.CurrentThread.ManagedThreadId).Next((int)1E2, (int)1E4));
+
+            // 2.The Outer async method calls another Inner async method (still within the context), which returns an uncompleted Task.
+            // 3. The Outer async method awaits for the Task returned by Inner async method to complete.The context(UI) is captured for use by the continuation of the Outer async method later.The outer async method returns an uncompleted Task to the UI method.
+
+            await Task.Delay(new Random(Thread.CurrentThread.ManagedThreadId).Next((int)1E2, (int)1E4)); //Inner async method
+
+            // 5. Eventually, the Inner async method completes. 
+            // 6.T he continuation for Outer async method is now ready to run, and it waits for the context to be available so it can execute in the context.
+            // 7. Deadlock. The UI method is blocking the context thread waiting for Outer async method to complete, while the Outer async method is itself waiting for the context to be available so it can execute its continuation.
+
+            //continuation here
+        }
+
+        // Configure await false tells the continuation that it doesn't have to use the calling context, 
+        // making it such that the Outer async method doesn't need to wait for that context to be available to execute its continuation.
+        private async Task DoNothingTaskConfigureAwaitFalse()
+        {
+            Console.WriteLine($"taskThread[{Thread.CurrentThread.ManagedThreadId}]");
             await Task.Delay(new Random(Thread.CurrentThread.ManagedThreadId).Next((int)1E2, (int)1E4)).ConfigureAwait(false);
         }
+        #endregion
+
+        #region ParallelismDemo
+
+        //UI method
+        private void Data_Parallel_Class_Click(object sender, RoutedEventArgs e)
+        {
+            Console.WriteLine($"uiThread[{Thread.CurrentThread.ManagedThreadId}]");
+
+        }
+
+        private void Data_PLINQ_Click(object sender, RoutedEventArgs e)
+        {
+            Console.WriteLine($"uiThread[{Thread.CurrentThread.ManagedThreadId}]");
+
+        }
+
+        private void ParallelTask_PLINQ_Click(object sender, RoutedEventArgs e)
+        {
+            Console.WriteLine($"uiThread[{Thread.CurrentThread.ManagedThreadId}]");
+
+        }
+
+        #endregion
+
+        #region Asynchrony Demo
+
+        //continuation demo
+
+        //semaphore demo
+
+
+        #endregion
+
     }
 }

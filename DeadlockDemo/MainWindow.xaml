@@ -5,24 +5,23 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DeadlockDemo"
         mc:Ignorable="d"
-        Title="MainWindow" Height="160" Width="480">
+        Title="MainWindow" Height="600" Width="480">
     <Grid Margin="0,0,0,0">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="216*"/>
-            <ColumnDefinition Width="23*"/>
-            <ColumnDefinition Width="34*"/>
+            <ColumnDefinition Width="221*"/>
+            <ColumnDefinition Width="193*"/>
+            <ColumnDefinition Width="0*"/>
+            <ColumnDefinition Width="59*"/>
         </Grid.ColumnDefinitions>
-        <Button Content="Button" HorizontalAlignment="Left" Margin="35,99,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
-        <Label Content="Label" x:Name="myLabel" HorizontalAlignment="Left" Margin="55,63,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.395,-0.496">
-            <Label.RenderTransform>
-                <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform/>
-                    <RotateTransform Angle="0.178"/>
-                    <TranslateTransform/>
-                </TransformGroup>
-            </Label.RenderTransform>
-        </Label>
+        <Button Content="Deadlock"   HorizontalAlignment="Left" Margin="10,163,0,0" VerticalAlignment="Top" Width="75" Click="Deadlock_Click" Height="20"/>
+        <Button Content="NoDeadlockBackgroundThread"   HorizontalAlignment="Left" Margin="10,189,0,0" VerticalAlignment="Top" Width="183" Click="No_Deadlock_Background_Click" Height="20"/>
+        <Button Content="NoDeadlockConfigureAwaitFalse"   HorizontalAlignment="Left" Margin="10,213,0,0" VerticalAlignment="Top" Width="183" Click="No_Deadlock_Configure_Await_Click" Height="20"/>
+        <Label Content="Deadlock Demos" HorizontalAlignment="Left" Margin="10,132,0,0" VerticalAlignment="Top" Width="121"/>
+        
+        <Button Content="Data-ParallelClass"   HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top" Width="75" Click="Deadlock_Click" Height="20"/>
+        <Button Content="Data-PLINQ"   HorizontalAlignment="Left" Margin="10,67,0,0" VerticalAlignment="Top" Width="183" Click="No_Deadlock_Background_Click" Height="20"/>
+        <Button Content="TaskParallelism"   HorizontalAlignment="Left" Margin="10,91,0,0" VerticalAlignment="Top" Width="183" Click="No_Deadlock_Configure_Await_Click" Height="20"/>
+        <Label Content="Parallelism Demos" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="121"/>
 
     </Grid>
 </Window>
