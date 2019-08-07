@@ -1,0 +1,34 @@
+﻿<Window x:Class="ConcurrencyDemo.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DeadlockDemo"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="600" Width="480">
+    <Grid Margin="0,0,0,0">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="221*"/>
+            <ColumnDefinition Width="193*"/>
+            <ColumnDefinition Width="0*"/>
+            <ColumnDefinition Width="59*"/>
+        </Grid.ColumnDefinitions>
+        <Button Content="Deadlock"   HorizontalAlignment="Left" Margin="10,162,0,0" VerticalAlignment="Top" Width="183" Click="Deadlock_Click" Height="20"/>
+        <Button Content="NoDeadlockBackgroundThread"   HorizontalAlignment="Left" Margin="10,188,0,0" VerticalAlignment="Top" Width="183" Click="No_Deadlock_Background_Click" Height="20"/>
+        <Button Content="NoDeadlockConfigureAwaitFalse"   HorizontalAlignment="Left" Margin="10,212,0,0" VerticalAlignment="Top" Width="183" Click="No_Deadlock_Configure_Await_Click" Height="20"/>
+        <Label Content="Deadlock Demos" HorizontalAlignment="Left" Margin="10,131,0,0" VerticalAlignment="Top" Width="121"/>
+
+        <Button Content="Data-ParallelClass"   HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top" Width="183" Click="Data_Parallel_Class_Click" Height="20"/>
+        <Button Content="Data-PLINQ"   HorizontalAlignment="Left" Margin="10,67,0,0" VerticalAlignment="Top" Width="183" Click="Data_PLINQ_Click" Height="20"/>
+        <Button Content="TaskParallelism"   HorizontalAlignment="Left" Margin="10,91,0,0" VerticalAlignment="Top" Width="183" Click="Task_ParallelTask_Click" Height="20"/>
+        <Label Content="Parallelism Demos" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="121"/>
+
+        <Button Content="Parallel Race"   HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top" Width="183" Click="Race_Example" Height="20" Grid.ColumnSpan="3" Grid.Column="1"/>
+        <Button Content="Lock"   HorizontalAlignment="Left" Margin="10,67,0,0" VerticalAlignment="Top" Width="183" Click="Lock_Example" Height="20" Grid.ColumnSpan="3" Grid.Column="1"/>
+        <Label Content="Lock Demos" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="121" Grid.Column="1"/>
+        <Button Content="Task Race"   HorizontalAlignment="Left" Margin="10,144,0,0" VerticalAlignment="Top" Width="183" Click="When_All" Height="20" Grid.ColumnSpan="3" Grid.Column="1"/>
+        <Button Content="SemaphoreSlim"   HorizontalAlignment="Left" Margin="10,170,0,0" VerticalAlignment="Top" Width="183" Click="When_All_Semaphore_Slim" Height="20" Grid.ColumnSpan="3" Grid.Column="1"/>
+        <Label Content="Asynchrony Demos" HorizontalAlignment="Left" Margin="10,113,0,0" VerticalAlignment="Top" Width="121" Grid.Column="1"/>
+
+    </Grid>
+</Window>
