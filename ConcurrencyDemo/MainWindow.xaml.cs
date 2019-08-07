@@ -45,6 +45,12 @@ namespace ConcurrencyDemo
             DoNothingTaskConfigureAwaitFalse().Wait();
         }
 
+        private async void No_Deadlock_All_Async_Click(object sender, RoutedEventArgs e)
+        {
+            Console.WriteLine($"uiThread[{Thread.CurrentThread.ManagedThreadId}]");
+            await DoNothingTask();
+        }
+
         //Outter async method
         private async Task DoNothingTask()
         {
@@ -265,9 +271,9 @@ namespace ConcurrencyDemo
                     //Console.WriteLine($"thread[{Thread.CurrentThread.ManagedThreadId}]");
                     await Task.Delay(0);
 
-                    await semaphore.WaitAsync();
+                    await semaphore.WaitAsync(); //decrements current count
                     sharedResource++;
-                    semaphore.Release();
+                    semaphore.Release(); //increments current count, if current count goes above max count an exception will be thrown.
                 });
             }
 
@@ -289,6 +295,43 @@ namespace ConcurrencyDemo
 
             Console.WriteLine($"uiThread[{Thread.CurrentThread.ManagedThreadId}] - sharedResourceTotal[{sharedResource}] - numberOfIterations[{iterations}]");
         }
+        #endregion
+
+        #region Continuation Demo
+
+        private void Continue_With(object sender, RoutedEventArgs e)
+        {
+            Console.WriteLine($"uiThread[{Thread.CurrentThread.ManagedThreadId}]");
+            Task.Delay(10)
+                .ContinueWith(
+                task => 
+                Console.WriteLine($"thread[{Thread.CurrentThread.ManagedThreadId}] - continuation"));
+        }
+
+        private void Continue_With_Sync_Context(object sender, RoutedEventArgs e)
+        {
+            Console.WriteLine($"uiThread[{Thread.CurrentThread.ManagedThreadId}]");
+            Task.Delay(10)
+                .ContinueWith(
+                task =>
+                Console.WriteLine($"thread[{Thread.CurrentThread.ManagedThreadId}] - continuation"),
+                TaskScheduler.FromCurrentSynchronizationContext());
+        }
+
+        private async void AsyncContinuation(object sender, RoutedEventArgs e)
+        {
+            Console.WriteLine($"uiThread[{Thread.CurrentThread.ManagedThreadId}]");
+            await Task.Delay(10);
+            Console.WriteLine($"thread[{Thread.CurrentThread.ManagedThreadId}] - continuation");
+        }
+
+        private async void AsyncContinuationConfigureAwaitFalse(object sender, RoutedEventArgs e)
+        {
+            Console.WriteLine($"uiThread[{Thread.CurrentThread.ManagedThreadId}]");
+            await Task.Delay(10).ConfigureAwait(false);
+            Console.WriteLine($"thread[{Thread.CurrentThread.ManagedThreadId}] - continuation");
+        }
+
         #endregion
     }
 }
