@@ -73,7 +73,6 @@ namespace ConcurrencyDemo
 
         #region ParallelismDemo
 
-
         private void Data_Parallel_Class_Click(object sender, RoutedEventArgs e)
         {
             Console.WriteLine($"uiThread[{Thread.CurrentThread.ManagedThreadId}]");
@@ -123,60 +122,6 @@ namespace ConcurrencyDemo
                 );
         }
 
-        private void Race_Example(object sender, RoutedEventArgs e)
-        {
-            Console.WriteLine($"uiThread[{Thread.CurrentThread.ManagedThreadId}]");
-
-            int sharedResource = 0;
-
-            void ModifyMySharedResource()
-            {
-                sharedResource++;
-                Console.WriteLine($"thread[{Thread.CurrentThread.ManagedThreadId}] - start - sharedResource[{sharedResource}]");
-            }
-
-            Parallel.Invoke(
-                ModifyMySharedResource,
-                ModifyMySharedResource,
-                ModifyMySharedResource,
-                ModifyMySharedResource,
-                ModifyMySharedResource,
-                ModifyMySharedResource,
-                ModifyMySharedResource
-               );
-
-            Console.WriteLine($"uiThread[{Thread.CurrentThread.ManagedThreadId}] - end - sharedResource[{sharedResource}]");
-        }
-
-        object exampleLock = new object();
-        private void Lock_Example(object sender, RoutedEventArgs e)
-        {
-            Console.WriteLine($"uiThread[{Thread.CurrentThread.ManagedThreadId}]");
-
-            int sharedResource = 0;
-
-            void ModifyMySharedResource()
-            {
-                lock (exampleLock)
-                {
-                    sharedResource++;
-                    Console.WriteLine($"thread[{Thread.CurrentThread.ManagedThreadId}] - start - sharedResource[{sharedResource}]");
-                }
-            }
-
-            Parallel.Invoke(
-                ModifyMySharedResource,
-                ModifyMySharedResource,
-                ModifyMySharedResource,
-                ModifyMySharedResource,
-                ModifyMySharedResource,
-                ModifyMySharedResource,
-                ModifyMySharedResource
-               );
-
-            Console.WriteLine($"uiThread[{Thread.CurrentThread.ManagedThreadId}] - end - sharedResource[{sharedResource}]");
-        }
-
 
         private static List<double> GetRandomPositiveNumbers(int count, double max)
         {
@@ -191,16 +136,159 @@ namespace ConcurrencyDemo
 
         #endregion
 
-        #region Asynchrony Demo
+        #region Lock Demo
+        private void Race_Example(object sender, RoutedEventArgs e)
+        {
+            int sharedResource;
+            int expectedResourceTotal = 100;
+            int maxIterations = 100000;
+            int iterations = 1;
 
-        //when all
+            void ModifyMySharedResource()
+            {
+                // Console.WriteLine($"thread[{Thread.CurrentThread.ManagedThreadId}]");
+                sharedResource++;
+            }
 
-        //continuation demo
+            do
+            {
+                sharedResource = 0;
 
-        //semaphore demo
+                var actions = new List<Action>();
 
+                for (int i = 0; i < expectedResourceTotal; i++)
+                {
+                    actions.Add(ModifyMySharedResource);
+                }
+                Parallel.Invoke(actions.ToArray());
+
+                iterations++;
+            } while (sharedResource == expectedResourceTotal && iterations < maxIterations);
+
+            Console.WriteLine($"uiThread[{Thread.CurrentThread.ManagedThreadId}] - sharedResourceTotal[{sharedResource}] - numberOfIterations[{iterations}]");
+        }
+
+        object exampleLock = new object();
+        private void Lock_Example(object sender, RoutedEventArgs e)
+        {
+            int sharedResource;
+            int expectedResourceTotal = 100;
+            int maxIterations = 100000;
+            int iterations = 1;
+
+            void ModifyMySharedResource()
+            {
+                // Console.WriteLine($"thread[{Thread.CurrentThread.ManagedThreadId}]");
+                lock (exampleLock)
+                {
+                    sharedResource++;
+                }
+            }
+
+            do
+            {
+                sharedResource = 0;
+
+                var actions = new List<Action>();
+
+                for (int i = 0; i < expectedResourceTotal; i++)
+                {
+                    actions.Add(ModifyMySharedResource);
+                }
+                Parallel.Invoke(actions.ToArray());
+
+                iterations++;
+            } while (sharedResource == expectedResourceTotal && iterations < maxIterations);
+
+            Console.WriteLine($"uiThread[{Thread.CurrentThread.ManagedThreadId}] - sharedResourceTotal[{sharedResource}] - numberOfIterations[{iterations}]");
+        }
 
         #endregion
 
+        #region Asynchrony Demo
+
+        object badLock = new object();
+        //when all
+        private void When_All(object sender, RoutedEventArgs e)
+        {
+            int sharedResource;
+            int expectedResourceTotal = 100;
+            int maxIterations = 10000;
+            int iterations = 1;
+
+            Task DoNothingAsync()
+            {
+                return Task.Run(async () =>
+                {
+                    //Console.WriteLine($"thread[{Thread.CurrentThread.ManagedThreadId}]");
+                    //lock(badLock){                     
+                    await Task.Delay(0);
+                    sharedResource++;
+                    // }                     
+                });
+            }
+
+            do
+            {
+                sharedResource = 0;
+
+                var tasks = new List<Task>();
+
+                for (int i = 0; i < expectedResourceTotal; i++)
+                {
+                    tasks.Add(DoNothingAsync());
+                }
+
+                Task.WhenAll(tasks).Wait();
+
+                iterations++;
+            } while (sharedResource == expectedResourceTotal && iterations < maxIterations);
+
+            Console.WriteLine($"uiThread[{Thread.CurrentThread.ManagedThreadId}] - sharedResourceTotal[{sharedResource}] - numberOfIterations[{iterations}]");
+        }
+
+        //semaphore demo
+        private void When_All_Semaphore_Slim(object sender, RoutedEventArgs e)
+        {
+            Console.WriteLine($"uiThread[{Thread.CurrentThread.ManagedThreadId}]");
+
+            var semaphore = new SemaphoreSlim(1, 1);
+            int sharedResource;
+            int expectedResourceTotal = 100;
+            int maxIterations = 10000;
+            int iterations = 1;
+
+            Task DoNothingAsync()
+            {
+                return Task.Run(async () =>
+                {
+                    //Console.WriteLine($"thread[{Thread.CurrentThread.ManagedThreadId}]");
+                    await Task.Delay(0);
+
+                    await semaphore.WaitAsync();
+                    sharedResource++;
+                    semaphore.Release();
+                });
+            }
+
+            do
+            {
+                sharedResource = 0;
+
+                var tasks = new List<Task>();
+
+                for (int i = 0; i < expectedResourceTotal; i++)
+                {
+                    tasks.Add(DoNothingAsync());
+                }
+
+                Task.WhenAll(tasks).Wait();
+
+                iterations++;
+            } while (sharedResource == expectedResourceTotal && iterations < maxIterations);
+
+            Console.WriteLine($"uiThread[{Thread.CurrentThread.ManagedThreadId}] - sharedResourceTotal[{sharedResource}] - numberOfIterations[{iterations}]");
+        }
+        #endregion
     }
 }

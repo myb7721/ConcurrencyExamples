@@ -13,19 +13,22 @@
             <ColumnDefinition Width="0*"/>
             <ColumnDefinition Width="59*"/>
         </Grid.ColumnDefinitions>
-        <Button Content="Deadlock"   HorizontalAlignment="Left" Margin="10,300,0,0" VerticalAlignment="Top" Width="183" Click="Deadlock_Click" Height="20"/>
-        <Button Content="NoDeadlockBackgroundThread"   HorizontalAlignment="Left" Margin="10,326,0,0" VerticalAlignment="Top" Width="183" Click="No_Deadlock_Background_Click" Height="20"/>
-        <Button Content="NoDeadlockConfigureAwaitFalse"   HorizontalAlignment="Left" Margin="10,350,0,0" VerticalAlignment="Top" Width="183" Click="No_Deadlock_Configure_Await_Click" Height="20"/>
-        <Label Content="Deadlock Demos" HorizontalAlignment="Left" Margin="10,269,0,0" VerticalAlignment="Top" Width="121"/>
+        <Button Content="Deadlock"   HorizontalAlignment="Left" Margin="10,162,0,0" VerticalAlignment="Top" Width="183" Click="Deadlock_Click" Height="20"/>
+        <Button Content="NoDeadlockBackgroundThread"   HorizontalAlignment="Left" Margin="10,188,0,0" VerticalAlignment="Top" Width="183" Click="No_Deadlock_Background_Click" Height="20"/>
+        <Button Content="NoDeadlockConfigureAwaitFalse"   HorizontalAlignment="Left" Margin="10,212,0,0" VerticalAlignment="Top" Width="183" Click="No_Deadlock_Configure_Await_Click" Height="20"/>
+        <Label Content="Deadlock Demos" HorizontalAlignment="Left" Margin="10,131,0,0" VerticalAlignment="Top" Width="121"/>
 
         <Button Content="Data-ParallelClass"   HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top" Width="183" Click="Data_Parallel_Class_Click" Height="20"/>
         <Button Content="Data-PLINQ"   HorizontalAlignment="Left" Margin="10,67,0,0" VerticalAlignment="Top" Width="183" Click="Data_PLINQ_Click" Height="20"/>
         <Button Content="TaskParallelism"   HorizontalAlignment="Left" Margin="10,91,0,0" VerticalAlignment="Top" Width="183" Click="Task_ParallelTask_Click" Height="20"/>
         <Label Content="Parallelism Demos" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="121"/>
-        
-        <Button Content="Race"   HorizontalAlignment="Left" Margin="10,165,0,0" VerticalAlignment="Top" Width="183" Click="Race_Example" Height="20"/>
-        <Button Content="Lock"   HorizontalAlignment="Left" Margin="10,191,0,0" VerticalAlignment="Top" Width="183" Click="Lock_Example" Height="20"/>
-        <Label Content="Lock Demos" HorizontalAlignment="Left" Margin="10,134,0,0" VerticalAlignment="Top" Width="121"/>
+
+        <Button Content="Parallel Race"   HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top" Width="183" Click="Race_Example" Height="20" Grid.ColumnSpan="3" Grid.Column="1"/>
+        <Button Content="Lock"   HorizontalAlignment="Left" Margin="10,67,0,0" VerticalAlignment="Top" Width="183" Click="Lock_Example" Height="20" Grid.ColumnSpan="3" Grid.Column="1"/>
+        <Label Content="Lock Demos" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="121" Grid.Column="1"/>
+        <Button Content="Task Race"   HorizontalAlignment="Left" Margin="10,144,0,0" VerticalAlignment="Top" Width="183" Click="When_All" Height="20" Grid.ColumnSpan="3" Grid.Column="1"/>
+        <Button Content="SemaphoreSlim"   HorizontalAlignment="Left" Margin="10,170,0,0" VerticalAlignment="Top" Width="183" Click="When_All_Semaphore_Slim" Height="20" Grid.ColumnSpan="3" Grid.Column="1"/>
+        <Label Content="Asynchrony Demos" HorizontalAlignment="Left" Margin="10,113,0,0" VerticalAlignment="Top" Width="121" Grid.Column="1"/>
 
     </Grid>
 </Window>
