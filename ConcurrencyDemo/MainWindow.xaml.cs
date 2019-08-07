@@ -153,6 +153,7 @@ namespace ConcurrencyDemo
             void ModifyMySharedResource()
             {
                 // Console.WriteLine($"thread[{Thread.CurrentThread.ManagedThreadId}]");
+                // Note: In a real world scenario, Interlocked.Increment would be a better choice for this
                 sharedResource++;
             }
 
